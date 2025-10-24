@@ -10,6 +10,74 @@ entities["despawn"] = function (eid)
     entities_manager.despawn(eid)
 end
 
+-- Патч частиц
+do
+    gfx = gfx or {}
+    gfx.particles = gfx.particles or {}
+
+    gfx.particles.emit = function (...)
+        return particles_manager.emit(...)
+    end
+
+    gfx.particles.stop = function (id)
+        particles_manager.stop(id)
+    end
+
+    gfx.particles.is_alive = function (id)
+        if not particles_manager.get(id) then return false end
+        return particles_manager.get(id) and true or false
+    end
+
+    gfx.particles.get_origin = function (id)
+        if not particles_manager.get(id) then return nil end
+        local particle = particles_manager.get(id)
+        if not particle then return nil end
+        return particle.origin
+    end
+
+    gfx.particles.set_origin = function (id, ...)
+        if not particles_manager.get(id) then return nil end
+        local particle = particles_manager.get(id)
+        particle.origin(...)
+    end
+end
+
+--  Патч звуков
+do
+    audio = audio or {}
+
+    local methods = {
+        "play_stream",
+        "play_stream_2d",
+        "play_sound",
+        "play_sound_2d",
+        "stop",
+        "pause",
+        "resume",
+        "set_loop",
+        "is_loop",
+        "get_volume",
+        "set_volume",
+        "get_pitch",
+        "set_pitch",
+        "get_time",
+        "set_time",
+        "get_position",
+        "set_position",
+        "get_velocity",
+        "set_velocity",
+        "count_speakers",
+        "count_streams"
+    }
+
+    for _, name in ipairs(methods) do
+        audio[name] = function(...)
+            --debug.print("called " .. name)
+            return audio_manager[name](...)
+        end
+    end
+end
+
 --- Патчим корутины
 
 -- local __vc_resume_coroutine_default = __vc_resume_coroutine
