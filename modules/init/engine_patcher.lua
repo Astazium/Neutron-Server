@@ -1,5 +1,8 @@
 local entities_manager = start_require "lib/private/entities/entities_manager"
 
+local particles_manager = start_require "lib/private/gfx/particles_manager"
+local audio_manager = start_require "lib/private/gfx/audio_manager"
+
 logger.log("Patching the in-memory engine before start")
 
 --- Патчим сущностей
