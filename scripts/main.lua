@@ -1,3 +1,19 @@
+local __require = require
+
+local function require(path)
+    local result = __require(path)
+
+    local major, minor = app.get_version()
+    if (major > 0) or (major == 0 and minor >= 29) then
+        local env = __vc__pack_envs["server"]
+        for k, v in pairs(env) do
+            _G[k] = v
+        end
+    end
+
+    return result
+end
+
 app.config_packs({ "server" })
 app.load_content()
 require "server:std/stdboot"
