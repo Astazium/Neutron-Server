@@ -149,7 +149,10 @@ while LAUNCH_ATTEMPTS <= 1 do
     logger.log(string.format("Launch attempt number: %s", LAUNCH_ATTEMPTS), nil, nil, PROCESS_NAME)
     LAUNCH_ATTEMPTS = LAUNCH_ATTEMPTS + 1
 
-    local status, err = pcall(main)
+    --local status, err = pcall(main)
+    local status, err = xpcall(main, function (err)
+        return debug.traceback(err, 2)
+    end)
 
     if not status then
         logger.log(string.format("Failed with an error: %s", err), nil, nil, PROCESS_NAME)
